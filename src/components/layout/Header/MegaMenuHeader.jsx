@@ -1,0 +1,652 @@
+"use client";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaChevronDown,
+  FaBars,
+  FaTimes,
+  FaArrowRight,
+  FaBook,
+  FaCalendar,
+  FaFileAlt,
+  FaBookOpen,
+  FaHeart,
+  FaUsers,
+  FaChartLine,
+  FaDollarSign,
+  FaBuilding,
+  FaLightbulb,
+  FaAward,
+  FaBullhorn,
+  FaSearch,
+  FaPencilAlt,
+  FaEnvelope,
+  FaShareAlt,
+  FaVideo,
+  FaPalette,
+  FaMobileAlt,
+  FaCode,
+  FaRocket,
+  FaPhone,
+} from "react-icons/fa";
+
+const MegaMenuHeader = () => {
+  const pathname = usePathname();
+  const isContactPage = pathname === "/contact";
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const menuTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleMenuEnter = (menuType) => {
+    if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
+    setActiveMenu(menuType);
+  };
+
+  const handleMenuLeave = () => {
+    menuTimeoutRef.current = setTimeout(() => {
+      setActiveMenu(null);
+    }, 200);
+  };
+
+  // Services Menu Structure - Only services with dedicated pages
+  const servicesMenu = {
+    categories: [
+      {
+        id: "digital-marketing",
+        title: "Digital Marketing",
+        subtitle: "Drive growth with data-driven marketing strategies.",
+        icon: <FaBullhorn />,
+      },
+      {
+        id: "development",
+        title: "Web & Technology",
+        subtitle: "Build powerful digital experiences.",
+        icon: <FaCode />,
+      },
+    ],
+    content: {
+      "digital-marketing": {
+        sections: [
+          {
+            title: "SEARCH & ADVERTISING",
+            items: [
+              {
+                icon: <FaSearch />,
+                title: "SEO Optimization",
+                description: "Rank higher and drive organic traffic.",
+                link: "/services/seo-optimization",
+              },
+              {
+                icon: <FaBullhorn />,
+                title: "PPC Advertising",
+                description: "Maximize ROI with targeted ad campaigns.",
+                link: "/services/paid-advertising",
+              },
+              {
+                icon: <FaVideo />,
+                title: "YouTube Marketing",
+                description: "Grow your brand with video content.",
+                link: "/services/youtube-marketing",
+              },
+            ],
+          },
+          {
+            title: "CONTENT & SOCIAL",
+            items: [
+              {
+                icon: <FaPencilAlt />,
+                title: "Content Marketing",
+                description: "Engaging content that converts.",
+                link: "/services/content-marketing",
+              },
+              {
+                icon: <FaShareAlt />,
+                title: "Social Media Marketing",
+                description: "Build community and brand awareness.",
+                link: "/services/social-media",
+              },
+              {
+                icon: <FaEnvelope />,
+                title: "Email Marketing",
+                description: "Personalized campaigns that resonate.",
+                link: "/services/email-marketing",
+              },
+            ],
+          },
+        ],
+        featured: {
+          title: "Free Digital Marketing Audit",
+          description: "Get a comprehensive analysis of your online presence.",
+        },
+      },
+      development: {
+        sections: [
+          {
+            title: "WEB & AI SOLUTIONS",
+            items: [
+              {
+                icon: <FaCode />,
+                title: "Web Development",
+                description: "Fast, responsive, and SEO-friendly websites.",
+                link: "/services/web-development",
+              },
+              {
+                icon: <FaChartLine />,
+                title: "AI & Automation",
+                description: "Smart solutions powered by AI technology.",
+                link: "/services/ai-automation",
+              },
+            ],
+          },
+        ],
+        featured: {
+          title: "Website Launch Package",
+          description: "Everything you need to go live in 30 days.",
+        },
+      },
+    },
+  };
+
+  const [activeServicesCategory, setActiveServicesCategory] = useState(0);
+
+  const currentServicesContent =
+    servicesMenu.content[servicesMenu.categories[activeServicesCategory]?.id] ||
+    servicesMenu.content["digital-marketing"];
+
+  return (
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 container mx-auto ${isScrolled || isContactPage
+          ? "bg-white/70 backdrop-blur-sm border-b border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.3)] rounded-b-3xl md:rounded-3xl md:mt-2"
+          : "bg-white/90 rounded-b-3xl"
+          }`}
+      >
+        <div className="container mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center gap-8">
+              <Link href="/" className="flex items-center gap-2">
+                <img
+                  src="https://res.cloudinary.com/de4kw1t2i/image/upload/v1768545326/bp-logo_3_j7upkn.png"
+                  alt="Branding Pioneers Logo"
+                  className="h-10"
+                />
+              </Link>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1">
+              <Link
+                href="/"
+                className={`px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                  : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                  }`}
+              >
+                Home
+              </Link>
+              <Link
+                href="/about"
+                className={`px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                  : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                  }`}
+              >
+                About
+              </Link>
+              <Link
+                href="/services/ai-solutions"
+                className={`px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                  : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                  }`}
+              >
+                AI Solutions
+              </Link>
+
+              {/* Services Mega Menu */}
+              <div
+                className="relative"
+                onMouseEnter={() => handleMenuEnter("services")}
+                onMouseLeave={handleMenuLeave}
+              >
+                <button
+                  className={`flex items-center gap-1 px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                    ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                    : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                    }`}
+                >
+                  Services
+                  <FaChevronDown
+                    className={`text-xs transition-transform duration-200 ${activeMenu === "services" ? "rotate-180" : ""
+                      }`}
+                  />
+                </button>
+
+                {/* Services Mega Menu Dropdown */}
+                <AnimatePresence>
+                  {activeMenu === "services" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="fixed inset-x-0 top-20 px-4 flex justify-center"
+                      onMouseEnter={() => handleMenuEnter("services")}
+                      onMouseLeave={handleMenuLeave}
+                    >
+                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden w-full max-w-6xl">
+                        <div className="flex">
+                          {/* Left Sidebar - Service Categories */}
+                          <div className="w-64 bg-warm-50 border-r border-warm-100 p-4">
+                            <div className="space-y-1">
+                              {servicesMenu.categories.map((category, index) => (
+                                <button
+                                  key={category.id}
+                                  onMouseEnter={() =>
+                                    setActiveServicesCategory(index)
+                                  }
+                                  className={`w-full text-left px-3 py-3 rounded-lg transition-all ${activeServicesCategory === index
+                                    ? "bg-white shadow-sm"
+                                    : "hover:bg-white/50"
+                                    }`}
+                                >
+                                  <div className="flex items-start gap-3">
+                                    <div
+                                      className={`text-lg mt-0.5 ${activeServicesCategory === index
+                                        ? "text-warm-600"
+                                        : "text-warm-400"
+                                        }`}
+                                    >
+                                      {category.icon}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div
+                                        className={`text-sm font-semibold mb-0.5 ${activeServicesCategory === index
+                                          ? "text-warm-900"
+                                          : "text-warm-700"
+                                          }`}
+                                      >
+                                        {category.title}
+                                      </div>
+                                      <div className="text-xs text-warm-600 leading-snug">
+                                        {category.subtitle}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Right Content Area */}
+                          <div className="flex-1 p-5">
+                            <div className="flex gap-6">
+                              {/* Service Sections */}
+                              <div className="flex-1">
+                                <div className="space-y-5">
+                                  {currentServicesContent.sections?.map(
+                                    (section, sIdx) => (
+                                      <div key={sIdx}>
+                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                                          {section.title}
+                                        </h3>
+                                        <div className="space-y-1">
+                                          {section.items.map((item, iIdx) => (
+                                            <Link
+                                              key={iIdx}
+                                              href={item.link}
+                                              className="flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50 transition-colors group"
+                                            >
+                                              <div className="text-warm-400 text-sm mt-0.5 group-hover:text-warm-600 transition-colors">
+                                                {item.icon}
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <div className="text-sm font-medium text-gray-900 mb-0.5 group-hover:text-warm-700">
+                                                  {item.title}
+                                                </div>
+                                                <div className="text-xs text-gray-500 leading-snug">
+                                                  {item.description}
+                                                </div>
+                                              </div>
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Featured Section */}
+                              {currentServicesContent.featured && (
+                                <div className="w-56">
+                                  <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                                    FEATURED
+                                  </div>
+                                  <Link
+                                    href="#"
+                                    className="block rounded-xl overflow-hidden bg-gradient-to-br from-warm-400 to-warm-500 p-6 hover:shadow-lg transition-shadow group"
+                                  >
+                                    <div className="aspect-[4/3] mb-3 flex items-center justify-center">
+                                      <div className="text-center">
+                                        <div className="text-white text-4xl mb-3">
+                                          🚀
+                                        </div>
+                                        <div className="text-white font-semibold text-xl mb-1">
+                                          Special Offer
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="text-sm font-semibold text-white mb-1">
+                                      {currentServicesContent.featured.title}
+                                    </div>
+                                    <div className="text-xs text-white/90">
+                                      {
+                                        currentServicesContent.featured
+                                          .description
+                                      }
+                                    </div>
+                                  </Link>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <Link
+                href="/portfolio"
+                className={`px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                  : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                  }`}
+              >
+                Portfolio
+              </Link>
+
+              <Link
+                href="/careers"
+                className={`px-3 py-2 text-sm font-medium border shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)] border-white/20 bg-white/30 rounded-full transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black/80 hover:bg-white/20 "
+                  : "text-black/70 hover:text-black/80 hover:bg-white/20"
+                  }`}
+              >
+                Career
+              </Link>
+            </nav>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              <a
+                href="tel:09811780937"
+                className={`hidden lg:flex items-center gap-2 text-sm font-bold transition-colors ${isScrolled || isContactPage
+                  ? "text-black/70 hover:text-black"
+                  : "text-black/70 hover:text-black"
+                  }`}
+              >
+                <FaPhone className="text-sm" />
+                <span>098117 80937</span>
+              </a>
+              <Link href="/contact">
+                <button
+                  className={`hidden lg:block px-4 py-2 rounded-full text-sm font-medium transition-colors ${isScrolled || isContactPage
+                    ? "bg-warm-500 text-white hover:bg-warm-800"
+                    : "bg-white text-warm-700 hover:bg-white/90"
+                    }`}
+                >
+                  Request a demo
+                </button>
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className={`lg:hidden p-2 transition-colors ${isScrolled || isContactPage ? "text-warm-700" : "text-black"
+                  }`}
+              >
+                {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Full-Screen Mobile Menu - Rendered outside header to avoid stacking context issues */}
+      <div
+        className={`lg:hidden fixed inset-0 z-[100000] transition-all duration-500 ${isMobileMenuOpen
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+          }`}
+      >
+        {/* Animated Backdrop */}
+        <div
+          className={`absolute inset-0 transition-all duration-500 ${isMobileMenuOpen ? "bg-black/80 backdrop-blur-md" : "bg-transparent"
+            }`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+
+        {/* Sliding Menu Panel */}
+        <div
+          className={`absolute top-0 right-0 h-full w-full max-w-[420px] transition-transform duration-500 ease-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          style={{
+            background:
+              "linear-gradient(135deg, #0f0f0f 0%, #1a1510 50%, #0f0f0f 100%)",
+          }}
+        >
+          {/* Decorative Gradient Orbs */}
+          <div className="absolute top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#C69563]/30 to-transparent rounded-full blur-3xl animate-pulse" />
+          <div
+            className="absolute bottom-40 right-0 w-32 h-32 bg-gradient-to-l from-[#FBD9BF]/20 to-transparent rounded-full blur-2xl animate-pulse"
+            style={{ animationDelay: "1s" }}
+          />
+
+          {/* Header with Close */}
+          <div className="relative z-10 flex items-center justify-between p-6 border-b border-white/10">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+                <img
+                  src="/bp-logo.png"
+                  alt="Branding Pioneers Logo"
+                  className="h-10 w-auto object-contain"
+                />
+              </Link>
+            </div>
+
+            {/* Animated Close Button */}
+            <button
+              className="relative w-11 h-11 rounded-full flex items-center justify-center overflow-hidden group"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-[#C69563] to-[#FBD9BF] opacity-20 group-hover:opacity-40 transition-opacity" />
+              <div className="absolute inset-0.5 bg-[#1a1a1a] rounded-full" />
+              <FaTimes className="relative z-10 text-[#FBD9BF] group-hover:rotate-90 transition-transform duration-300" />
+            </button>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="relative z-10 h-[calc(100%-80px)] overflow-y-auto pb-20">
+            {/* Main Navigation */}
+            <div className="p-6 space-y-1">
+              {[
+                { name: "Home", path: "/" },
+                { name: "About", path: "/about" },
+                { name: "Portfolio", path: "/portfolio" },
+                { name: "Career", path: "/careers" },
+                { name: "Contact", path: "/contact" },
+              ].map((item, index) => (
+                <Link
+                  key={item.name}
+                  href={item.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`group flex items-center justify-between py-4 border-b border-white/5 cursor-pointer transition-all duration-300 ${isMobileMenuOpen
+                    ? "translate-x-0 opacity-100"
+                    : "translate-x-8 opacity-0"
+                    }`}
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
+                  <span className="text-2xl font-bold text-white group-hover:text-[#FBD9BF] transition-colors">
+                    {item.name}
+                  </span>
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#C69563]/30 transition-colors">
+                    <FaArrowRight className="text-xs text-white/50 group-hover:text-[#FBD9BF]" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Services Section with Tabs */}
+            <div className="px-6 mb-6">
+              <div
+                className={`transition-all duration-500 ${isMobileMenuOpen
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-4 opacity-0"
+                  }`}
+                style={{ transitionDelay: "350ms" }}
+              >
+                <h3 className="text-xs uppercase tracking-widest text-[#C69563] font-bold mb-4 flex items-center gap-2">
+                  <span className="w-6 h-[1px] bg-[#C69563]" />
+                  Services
+                </h3>
+
+                {/* Horizontal Scrollable Tabs */}
+                <div
+                  className="flex gap-2 mb-4 overflow-x-auto pb-2 -mx-6 px-6"
+                  style={{ scrollbarWidth: "none" }}
+                >
+                  {servicesMenu.categories.map((category, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveServicesCategory(index)}
+                      className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeServicesCategory === index
+                        ? "bg-gradient-to-r from-[#C69563] to-[#B88552] text-white shadow-lg shadow-[#C69563]/30"
+                        : "bg-white/5 text-white/70 hover:bg-white/10"
+                        }`}
+                    >
+                      <span className="text-base">{category.icon}</span>
+                      <span className="whitespace-nowrap">
+                        {category.title.split(" ")[0]}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Service Items Grid */}
+                <div className="grid grid-cols-2 gap-2">
+                  {servicesMenu.content[
+                    servicesMenu.categories[activeServicesCategory]?.id
+                  ]?.sections
+                    ?.flatMap((s) => s.items)
+                    .slice(0, 6)
+                    .map((service, idx) => (
+                      <Link
+                        key={idx}
+                        href={service.link || "#"}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="group p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-[#C69563]/30 transition-all duration-300"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C69563]/20 to-transparent flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                          <span className="text-[#FBD9BF] text-sm">
+                            {service.icon}
+                          </span>
+                        </div>
+                        <h4 className="text-white text-xs font-semibold mb-0.5">
+                          {service.title}
+                        </h4>
+                        <p className="text-white/40 text-[10px] line-clamp-1">
+                          {service.description}
+                        </p>
+                      </Link>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div
+              className={`px-6 transition-all duration-500 ${isMobileMenuOpen
+                ? "translate-y-0 opacity-100"
+                : "translate-y-4 opacity-0"
+                }`}
+              style={{ transitionDelay: "550ms" }}
+            >
+              <div className="relative p-5 rounded-2xl overflow-hidden">
+                {/* Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#C69563] to-[#8B6F47] opacity-90" />
+                <div
+                  className="absolute inset-0 opacity-50"
+                  style={{
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E\")",
+                  }}
+                />
+
+                <div className="relative z-10">
+                  <h4 className="text-white font-bold text-lg mb-1">
+                    Ready to Transform?
+                  </h4>
+                  <p className="text-white/80 text-sm mb-4">
+                    Let's create something extraordinary together.
+                  </p>
+                  <Link
+                    href="/contact"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-3 bg-white text-[#8B6F47] rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-colors shadow-lg"
+                  >
+                    <FaRocket />
+                    Get Started Today
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Social Links */}
+            <div
+              className={`px-6 pt-8 pb-6 transition-all duration-500 ${isMobileMenuOpen
+                ? "translate-y-0 opacity-100"
+                : "translate-y-4 opacity-0"
+                }`}
+              style={{ transitionDelay: "650ms" }}
+            >
+              <div className="flex items-center justify-center gap-4">
+                {["Instagram", "LinkedIn", "Twitter"].map((social) => (
+                  <div
+                    key={social}
+                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#C69563]/30 transition-colors cursor-pointer group"
+                  >
+                    <span className="text-[10px] text-white/40 group-hover:text-[#FBD9BF] transition-colors">
+                      {social.charAt(0)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-white/20 text-xs mt-4">
+                © 2024 Branding Pioneers
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default MegaMenuHeader;
